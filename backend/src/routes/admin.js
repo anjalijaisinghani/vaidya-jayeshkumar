@@ -16,9 +16,11 @@ import {
   deleteCategory,
 } from '../controllers/adminCategoryController.js';
 import { updateProfile } from '../controllers/adminProfileController.js';
+import { uploadImage } from '../controllers/uploadController.js';
 import { requireAuth } from '../middleware/auth.js';
 import { originCheck } from '../middleware/originCheck.js';
 import { loginLimiter, accountLimiter } from '../middleware/rateLimit.js';
+import { singleImage } from '../middleware/upload.js';
 
 const router = Router();
 
@@ -54,5 +56,8 @@ router.patch('/categories/:id', updateCategory);
 router.delete('/categories/:id', deleteCategory);
 
 router.patch('/profile', updateProfile);
+
+// Login is checked first (above), so the file is only read for a signed-in admin.
+router.post('/uploads', singleImage, uploadImage);
 
 export default router;

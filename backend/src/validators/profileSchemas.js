@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { isOwnImageUrl } from '../utils/imageUrl.js';
 
 const emptyToNull = (value) => (value === '' ? null : value);
 
@@ -46,6 +47,19 @@ const httpsUrl = z
   .nullable()
   .optional();
 
+
+  const ownImageUrl = z
+  .string()
+  .trim()
+  .max(2048)
+  .refine(
+    (value) => value === '' || isOwnImageUrl(value),
+    'Image must be uploaded through the admin image uploader'
+  )
+  .transform(emptyToNull)
+  .nullable()
+  .optional();
+
 export const updateProfileSchema = z
   .object({
     doctor_name: z.string().trim().min(1).max(150).optional(),
@@ -59,7 +73,7 @@ export const updateProfileSchema = z
     address: text(1000),
     timings: text(1000),
     map_url: httpsUrl,
-    profile_image_url: httpsUrl,
+    profile_image_url: ownImageUrl,
   })
   .refine((data) => Object.keys(data).length > 0, {
     message: 'Provide at least one field to update',

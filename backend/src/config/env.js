@@ -13,6 +13,16 @@ if (process.env.JWT_SECRET.length < 32) {
   process.exit(1);
 }
 
+const cloudinary = {
+  cloudName: process.env.CLOUDINARY_CLOUD_NAME || '',
+  apiKey: process.env.CLOUDINARY_API_KEY || '',
+  apiSecret: process.env.CLOUDINARY_API_SECRET || '',
+};
+
+if (!cloudinary.cloudName || !cloudinary.apiKey || !cloudinary.apiSecret) {
+  console.warn('Cloudinary is not fully configured: image uploads are disabled.');
+}
+
 export const env = {
   nodeEnv: process.env.NODE_ENV || 'development',
   port: Number(process.env.PORT) || 5000,
@@ -25,4 +35,5 @@ export const env = {
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
   },
+  cloudinary,
 };

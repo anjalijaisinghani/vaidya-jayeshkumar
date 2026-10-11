@@ -1,4 +1,5 @@
 import sanitizeHtml from 'sanitize-html';
+import { isOwnImageUrl } from '../utils/imageUrl.js';
 
 const postHtmlOptions = {
   allowedTags: [
@@ -20,8 +21,9 @@ const postHtmlOptions = {
       return { tagName, attribs: out };
     },
   },
-  // Drop images that lost their src (for example an http:// image).
-  exclusiveFilter: (frame) => frame.tag === 'img' && !frame.attribs.src,
+  // Drop images with no src, or whose src is not from our own Cloudinary account.
+  exclusiveFilter: (frame) =>
+    frame.tag === 'img' && !(frame.attribs.src && isOwnImageUrl(frame.attribs.src)),
 };
 
 export const sanitizePostHtml = (html) => sanitizeHtml(html, postHtmlOptions);

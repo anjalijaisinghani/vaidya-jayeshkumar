@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import { isOwnImageUrl } from '../utils/imageUrl.js';
+
 
 const slugField = z
   .string()
@@ -12,8 +14,7 @@ const imageUrl = z
   .string()
   .trim()
   .max(2048)
-  .url()
-  .refine((value) => value.startsWith('https://'), 'Image URL must start with https://');
+  .refine(isOwnImageUrl, 'Image must be uploaded through the admin image uploader');
 
 const postFields = {
   title: z.string().trim().min(1).max(200),
