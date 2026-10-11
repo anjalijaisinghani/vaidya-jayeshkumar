@@ -9,6 +9,13 @@ import {
   updatePost,
   deletePost,
 } from '../controllers/adminPostController.js';
+import {
+  listCategories,
+  createCategory,
+  updateCategory,
+  deleteCategory,
+} from '../controllers/adminCategoryController.js';
+import { updateProfile } from '../controllers/adminProfileController.js';
 import { requireAuth } from '../middleware/auth.js';
 import { originCheck } from '../middleware/originCheck.js';
 import { loginLimiter, accountLimiter } from '../middleware/rateLimit.js';
@@ -34,10 +41,18 @@ router.patch('/account', accountLimiter, updateAccountDetails);
 router.patch('/account/password', accountLimiter, changePassword);
 
 router.get('/dashboard', getDashboard);
+
 router.get('/posts', listPosts);
 router.post('/posts', createPost);
 router.get('/posts/:id', getPost);
 router.patch('/posts/:id', updatePost);
 router.delete('/posts/:id', deletePost);
+
+router.get('/categories', listCategories);
+router.post('/categories', createCategory);
+router.patch('/categories/:id', updateCategory);
+router.delete('/categories/:id', deleteCategory);
+
+router.patch('/profile', updateProfile);
 
 export default router;
