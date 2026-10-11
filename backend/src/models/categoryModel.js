@@ -11,3 +11,11 @@ export async function listWithPublishedCount() {
   );
   return rows;
 }
+
+export async function findById(id) {
+  const [rows] = await pool.query(
+    'SELECT id, name, slug FROM categories WHERE id = ? LIMIT 1',
+    [id]
+  );
+  return rows[0] || null;
+}
