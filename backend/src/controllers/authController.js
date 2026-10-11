@@ -22,7 +22,7 @@ export const login = asyncHandler(async (req, res) => {
     throw new HttpError(401, 'Invalid email or password');
   }
 
-  res.cookie(COOKIE_NAME, signAdminToken(admin.id), {
+  res.cookie(COOKIE_NAME, signAdminToken(admin.id, admin.password_hash), {
     ...cookieOptions,
     maxAge: SESSION_HOURS * 60 * 60 * 1000,
   });
