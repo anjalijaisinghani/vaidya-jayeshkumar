@@ -1,0 +1,146 @@
+@import "tailwindcss";
+
+/*
+  Design tokens for Vaidya Jayeshkumar.
+  Colors are sampled from the official logo:
+    cream  #fdfaf3 (logo background)   leaf-800 #234b12 (logo "Vaidya")
+    leaf-600 #4e6f1c (leaves)          earth-700 #713c11 (logo "Jayeshkumar")
+  Rule: never put text on leaf-500 or lighter (too little contrast).
+*/
+@theme {
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: "Lora Variable", ui-serif, Georgia, "Times New Roman", serif;
+
+  --color-cream-50: #fffefa;
+  --color-cream-100: #fdfaf3;
+  --color-cream-200: #f6f0e0;
+  --color-cream-300: #e9dfc6;
+
+  --color-leaf-50: #f4f8ec;
+  --color-leaf-100: #e5efd2;
+  --color-leaf-200: #cde0a9;
+  --color-leaf-300: #adcb77;
+  --color-leaf-400: #8bb24c;
+  --color-leaf-500: #669523;
+  --color-leaf-600: #4e6f1c;
+  --color-leaf-700: #355a17;
+  --color-leaf-800: #234b12;
+  --color-leaf-900: #183509;
+
+  --color-earth-50: #fbf5ee;
+  --color-earth-100: #f4e6d6;
+  --color-earth-200: #e7cba9;
+  --color-earth-300: #d6a876;
+  --color-earth-400: #c08349;
+  --color-earth-500: #a1622a;
+  --color-earth-600: #854b1b;
+  --color-earth-700: #713c11;
+  --color-earth-800: #55300f;
+  --color-earth-900: #3a200b;
+
+  --color-ink-500: #647058;
+  --color-ink-600: #4f5b45;
+  --color-ink-700: #3c4733;
+  --color-ink-900: #1d2616;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+  body {
+    @apply bg-cream-100 font-sans text-ink-900 antialiased;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-serif font-semibold tracking-tight text-leaf-800;
+  }
+  a {
+    @apply text-leaf-700 underline-offset-4;
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-leaf-600);
+    outline-offset: 2px;
+  }
+  ::selection {
+    @apply bg-leaf-200 text-leaf-900;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+  }
+  .section {
+    @apply py-14 sm:py-20;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold no-underline transition-colors disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .btn-sm {
+    @apply px-4 py-2 text-xs;
+  }
+  .btn-primary {
+    @apply bg-leaf-800 text-white hover:bg-leaf-900;
+  }
+  .btn-secondary {
+    @apply border border-leaf-800 bg-transparent text-leaf-800 hover:bg-leaf-50;
+  }
+  .btn-earth {
+    @apply bg-earth-700 text-white hover:bg-earth-800;
+  }
+  .btn-danger {
+    @apply bg-red-700 text-white hover:bg-red-800;
+  }
+
+  .card {
+    @apply rounded-2xl border border-cream-300 bg-white shadow-sm;
+  }
+  .card-hover {
+    @apply transition-shadow hover:shadow-md;
+  }
+
+  .field-label {
+    @apply mb-1.5 block text-sm font-medium text-ink-700;
+  }
+  .field-input {
+    @apply block w-full rounded-lg border border-cream-300 bg-white px-4 py-2.5 text-base text-ink-900 placeholder:text-ink-500 focus:border-leaf-600 focus:ring-2 focus:ring-leaf-300 focus:outline-none;
+  }
+  .field-input-error {
+    @apply border-red-600 focus:border-red-600 focus:ring-red-200;
+  }
+  .field-hint {
+    @apply mt-1.5 text-sm text-ink-600;
+  }
+  .field-error {
+    @apply mt-1.5 text-sm text-red-700;
+  }
+
+  .alert {
+    @apply rounded-xl border px-4 py-3 text-sm;
+  }
+  .alert-success {
+    @apply border-leaf-300 bg-leaf-50 text-leaf-800;
+  }
+  .alert-error {
+    @apply border-red-200 bg-red-50 text-red-800;
+  }
+  .alert-info {
+    @apply border-earth-200 bg-earth-50 text-earth-800;
+  }
+
+  .spinner {
+    @apply inline-block size-5 animate-spin rounded-full border-2 border-leaf-200 border-t-leaf-700 motion-reduce:animate-none;
+  }
+  .skeleton {
+    @apply animate-pulse rounded-lg bg-cream-200 motion-reduce:animate-none;
+  }
+}
