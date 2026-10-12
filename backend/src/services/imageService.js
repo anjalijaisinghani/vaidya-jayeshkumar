@@ -32,3 +32,13 @@ export function uploadImageBuffer(buffer) {
     stream.end(buffer);
   });
 }
+
+// Returns true if Cloudinary reports the image was deleted.
+export async function deleteImage(publicId) {
+  if (!imageUploadsConfigured) return false;
+  const result = await cloudinary.uploader.destroy(publicId, {
+    resource_type: 'image',
+    invalidate: true,
+  });
+  return result.result === 'ok';
+}

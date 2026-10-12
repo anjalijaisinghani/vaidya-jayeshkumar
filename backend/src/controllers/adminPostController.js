@@ -9,6 +9,7 @@ import {
   idSchema,
 } from '../validators/postSchemas.js';
 import { sanitizePostHtml, makeExcerpt, hasContent } from '../services/contentService.js';
+import { removeUnusedImages, imagesOfPost } from '../services/imageCleanupService.js';
 import { findById as findCategoryById } from '../models/categoryModel.js';
 import * as posts from '../models/adminPostModel.js';
 
@@ -143,12 +144,28 @@ export const updatePost = asyncHandler(async (req, res) => {
     rethrowDuplicate(err);
   }
 
-  res.json({ success: true, data: await posts.findById(id) });
+  const updated = await posts.findById(id);
+
+  // Images the post used before but no longer uses are candidates for cleanup.
+  const after = new Set(imagesOfPost(updated));
+  const dropped = imagesOfPost(existing).filter((url) => !after.has(url));
+  const imagesRemoved = await removeUnusedImages(dropped);
+
+  res.json({ success: true, data: updated, meta: { images_removed: imagesRemoved } });
 });
 
 export const deletePost = asyncHandler(async (req, res) => {
   const id = parse(idSchema, req.params.id);
+  const existing = await posts.findById(id);
+  if (!existing) throw new HttpError(404, 'Post not found');
+
   const removed = await posts.deletePost(id);
   if (!removed) throw new HttpError(404, 'Post not found');
-  res.json({ success: true, data: { id, message: 'Post deleted' } });
+
+  const imagesRemoved = await removeUnusedImages(imagesOfPost(existing));
+  res.json({
+    success: true,
+    data: { id, message: 'Post deleted' },
+    meta: { images_removed: imagesRemoved },
+  });
 });
