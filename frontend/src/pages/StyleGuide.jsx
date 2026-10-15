@@ -49,7 +49,7 @@ export default function StyleGuide() {
   return (
     <main className="container-page py-10">
       <header className="flex flex-wrap items-center gap-4">
-        <img src={emblem} width="256" height="240" alt="" className="h-16 w-auto mix-blend-multiply" />
+        <img src={emblem} width="192" height="190" alt="" className="h-16 w-auto" />
         <div>
           <p className="font-serif text-2xl font-semibold text-leaf-800">Vaidya</p>
           <p className="font-serif text-2xl font-semibold text-earth-700">Jayeshkumar</p>
@@ -64,10 +64,10 @@ export default function StyleGuide() {
       <Block title="Logo">
         <img
           src={logo}
-          width="720"
-          height="695"
+          width="640"
+          height="792"
           alt="Vaidya Jayeshkumar - Ayurvedic Treatment logo"
-          className="h-auto w-72 max-w-full mix-blend-multiply"
+          className="h-auto w-72 max-w-full"
         />
       </Block>
 
