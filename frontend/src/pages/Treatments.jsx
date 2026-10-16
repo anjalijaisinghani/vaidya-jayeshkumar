@@ -1,21 +1,22 @@
 import PageHeader from '../components/PageHeader.jsx'
+import PostBrowser from '../components/PostBrowser.jsx'
 import Seo from '../components/Seo.jsx'
-import SectionPlaceholder from '../components/SectionPlaceholder.jsx'
 
 export default function Treatments() {
   return (
     <>
-      <Seo title="Treatments" />
+      <Seo title="Treatments" description="Information about Ayurvedic treatments from Vaidya Jayeshkumar." />
       <PageHeader eyebrow="Treatments" title="Ayurvedic treatments">
         Information about Ayurvedic treatments.
       </PageHeader>
-      <section className="section">
-        <div className="container-page">
-          <SectionPlaceholder title="Treatments coming soon">
-            Treatment information will appear here once it is published.
-          </SectionPlaceholder>
-        </div>
-      </section>
+      <PostBrowser
+        basePath="/treatments"
+        fixedCategory="ayurvedic-treatments"
+        noun={{ singular: 'treatment', plural: 'treatments' }}
+        searchLabel="Search treatments"
+        emptyTitle="No treatments yet"
+        emptyText="Treatment information will appear here once it is published."
+      />
     </>
   )
 }

@@ -1,8 +1,7 @@
 import { Link } from 'react-router'
 import logo from '../assets/logo.webp'
-import FeaturedArticles from '../components/FeaturedArticles.jsx'
+import PostRow from '../components/PostRow.jsx'
 import Seo from '../components/Seo.jsx'
-import SectionPlaceholder from '../components/SectionPlaceholder.jsx'
 import { SITE_NAME, SITE_TAGLINE } from '../lib/site.js'
 
 export default function Home() {
@@ -35,18 +34,30 @@ export default function Home() {
         </div>
       </section>
 
-      <FeaturedArticles />
-
-      <section className="pb-14 sm:pb-20">
-        <div className="container-page grid gap-6 md:grid-cols-2">
-          <SectionPlaceholder title="Treatments">
-            A summary of Ayurvedic treatments will appear here.
-          </SectionPlaceholder>
-          <SectionPlaceholder title="Ayurvedic Points">
-            Helpful Ayurvedic points and tips will appear here.
-          </SectionPlaceholder>
-        </div>
-      </section>
+      {/* Each row appears only when it has something to show. */}
+      <PostRow
+        primary
+        headingId="featured-heading"
+        title="Featured articles"
+        path="/posts/featured?limit=3"
+        viewAllTo="/articles"
+        viewAllLabel="View all articles"
+      />
+      <PostRow
+        headingId="treatments-heading"
+        title="Ayurvedic treatments"
+        path="/posts?category=ayurvedic-treatments&limit=3"
+        viewAllTo="/treatments"
+        viewAllLabel="All treatments"
+      />
+      <PostRow
+        headingId="points-heading"
+        title="Ayurvedic points"
+        path="/posts?category=ayurvedic-points&limit=3"
+        viewAllTo="/ayurvedic-points"
+        viewAllLabel="All Ayurvedic points"
+      />
+      <div className="pb-10 sm:pb-14" />
     </>
   )
 }

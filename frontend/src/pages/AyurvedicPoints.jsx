@@ -1,21 +1,22 @@
 import PageHeader from '../components/PageHeader.jsx'
+import PostBrowser from '../components/PostBrowser.jsx'
 import Seo from '../components/Seo.jsx'
-import SectionPlaceholder from '../components/SectionPlaceholder.jsx'
 
 export default function AyurvedicPoints() {
   return (
     <>
-      <Seo title="Ayurvedic Points" />
+      <Seo title="Ayurvedic Points" description="Ayurvedic points and tips from Vaidya Jayeshkumar." />
       <PageHeader eyebrow="Ayurvedic Points" title="Ayurvedic points">
         Short, practical Ayurvedic points and tips.
       </PageHeader>
-      <section className="section">
-        <div className="container-page">
-          <SectionPlaceholder title="Points coming soon">
-            Ayurvedic points will appear here once they are published.
-          </SectionPlaceholder>
-        </div>
-      </section>
+      <PostBrowser
+        basePath="/ayurvedic-points"
+        fixedCategory="ayurvedic-points"
+        noun={{ singular: 'point', plural: 'points' }}
+        searchLabel="Search Ayurvedic points"
+        emptyTitle="No Ayurvedic points yet"
+        emptyText="Ayurvedic points will appear here once they are published."
+      />
     </>
   )
 }

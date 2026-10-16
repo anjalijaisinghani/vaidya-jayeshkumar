@@ -2,12 +2,14 @@ import { Link, useParams } from 'react-router'
 import Seo from '../components/Seo.jsx'
 import { useApi } from '../hooks/useApi.js'
 import { formatDate } from '../lib/format.js'
+import { listPageFor } from '../lib/site.js'
 
 export default function ArticleDetail() {
   const { slug } = useParams()
   const post = useApi(`/posts/${encodeURIComponent(slug)}`)
   const notFound = post.status === 'error' && post.error.status === 404
   const article = post.status === 'ready' ? post.data : null
+  const where = listPageFor(article?.category_slug)
 
   return (
     <>
@@ -17,7 +19,7 @@ export default function ArticleDetail() {
       />
       <div className="container-page max-w-3xl py-10 sm:py-14">
         <p>
-          <Link to="/articles" className="text-sm font-semibold">&larr; All articles</Link>
+          <Link to={where.backTo} className="text-sm font-semibold">&larr; {where.backLabel}</Link>
         </p>
 
         {post.status === 'loading' && (
@@ -50,10 +52,7 @@ export default function ArticleDetail() {
         {article && (
           <article className="mt-8">
             <p className="text-xs font-semibold tracking-[0.18em] uppercase">
-              <Link
-                to={`/articles?category=${encodeURIComponent(article.category_slug)}`}
-                className="text-earth-700 no-underline hover:underline"
-              >
+              <Link to={where.listTo} className="text-earth-700 no-underline hover:underline">
                 {article.category_name}
               </Link>
             </p>
