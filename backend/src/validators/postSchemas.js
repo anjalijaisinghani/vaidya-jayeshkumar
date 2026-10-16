@@ -53,7 +53,7 @@ export const updatePostSchema = z
   });
 
 export const adminListQuerySchema = z.object({
-  page: z.coerce.number().int().min(1).default(1),
+  page: z.coerce.number().int().min(1).max(10000).default(1),
   limit: z.coerce.number().int().min(1).max(50).default(20),
   status: z.enum(['DRAFT', 'PUBLISHED']).optional(),
   category: z.string().trim().max(140).optional(),

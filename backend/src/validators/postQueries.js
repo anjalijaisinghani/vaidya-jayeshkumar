@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { HttpError } from '../utils/httpError.js';
 
 const listSchema = z.object({
-  page: z.coerce.number().int().min(1).default(1),
+  page: z.coerce.number().int().min(1).max(10000).default(1),
   limit: z.coerce.number().int().min(1).max(50).default(9),
   category: z.string().trim().max(140).optional(),
   search: z.string().trim().max(100).optional(),
