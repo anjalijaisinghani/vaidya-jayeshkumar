@@ -1,0 +1,827 @@
+Project Documentation: Vaidya Jayeshkumar
+
+Vaidya Jayeshkumar
+
+Ayurvedic Knowledge & Wellness Platform
+
+Public website
+
+Anyone can visit the website to view the doctor's profile, contact details, articles, blogs, Ayurvedic treatments, tips, and images without logging in.
+
+Private admin panel
+
+Only the authorized doctor/admin can log in, create content, upload images, edit or delete posts, and publish them immediately.
+
+Developer credit
+
+Website footer: “Designed & Developed by Anjali Jaisinghani”.
+
+1. Project overview:
+
+	Item		Description
+	Project name	Vaidya Jayeshkumar
+	Project type	Full-stack Ayurvedic content management website
+	Primary user	Doctor / website administrator
+	Public users	Patients, readers, and visitors
+	Main objective	Publish and manage Ayurvedic knowledge online
+	Access model	Public read access + private admin access
+	Publishing	Immediate publication
+	Developer	Anjali JAISINGHANI
+
+1.1 Problem statement
+
+The client needs a professional website where people can learn about the doctor's Ayurvedic knowledge, treatments, wellness information, and published content. Currently, without a content management system, the client may have to depend on a developer whenever new information or images need to be added.
+
+The proposed system will provide a public website and an easy-to-use admin dashboard. The doctor can manage content independently without writing code, while visitors can access published information from mobile phones or computers.
+
+1.2 Project objectives
+
+Establish a professional online presence for the doctor.
+
+Display the doctor's name, profile, qualifications, clinic address, contact information, and timings.
+
+Publish Ayurvedic blogs, articles, treatments, points, and images.
+
+Allow the doctor to create, edit, delete, and publish content without developer assistance.
+
+Make published content publicly accessible through shareable URLs.
+
+Provide a responsive, mobile-friendly interface.
+
+Protect admin access and uploaded content.
+
+Make the website easy to maintain and expand in the future.
+
+2. Functional requirements
+
+Functional requirements describe what the website must do.
+
+2.1 Public website
+
+ID		Requirement		Description
+FR-01		Home page		Show the doctor's introduction, featured articles, 					and latest posts
+FR-02		Doctor profile		Display name, qualifications, specialization, 						experience, and profile photo.
+FR-03		Contact information	Show clinic address, phone, WhatsApp, email, 						timings, and map link
+FR-04		Articles and blogs	Display published articles with titles, images, 					dates, and content
+FR-05		Ayurvedic treatments	Display educational information about Ayurvedic 					treatments and practices.
+FR-06		Ayurvedic points	Display short tips and informational posts.
+FR-07		Categories		Organize content into Articles, Blogs, Treatments, 					and Ayurvedic Points
+FR-08		Article details		Open each post on its own page with a unique URL.
+FR-09		Search and filtering	Allow visitors to search content and filter by 						category.
+
+FR-10		Responsive design	Support desktop, tablet, and mobile screens.
+FR-11		Social sharing		Allow visitors to share public article links
+FR-12		Developer credit	Show “Designed & Developed by Anjali Jaisinghani” 					in the footer.
+
+
+2.2 Admin panel
+
+ID	Requirement		Description
+FR-13	Admin login		Authenticate the authorized administrator.
+FR-14	Dashboard		Show total posts, published posts, and available categories
+FR-15	Create content		Add title, category, text, cover image, and article 					content.
+FR-16	Image upload		Upload and select images for articles.
+FR-17   Edit content		Update existing posts.
+FR-18   Delete content		Delete posts after confirmation.
+FR-19	Immediate publishing	Publish a post immediately after the admin chooses Publish.
+FR-20	Content management	View, search, and filter existing posts.
+FR-21	Profile management	Update doctor details and clinic contact information.
+FR-22	Logout			End the admin session securely
+
+
+Important publishing rule: The public website must display only published posts. Drafts, if supported later, must remain private. Clicking Publish should save the content to the database and make it visible publicly immediately.
+
+3. Non-functional requirements
+
+Security: Admin-only operations must be protected by server-side authorization.
+
+Performance: Images should be compressed and pages should load efficiently.
+
+Usability: The doctor should be able to publish an article without technical knowledge.
+
+Availability: The website should remain accessible subject to the hosting provider's uptime and free-tier limits.
+
+Maintainability: Frontend, backend, database, and image storage should be organized separately.
+
+Accessibility: Use readable fonts, adequate contrast, descriptive image alt text, and keyboard-accessible controls.
+
+SEO: Each article should have a descriptive URL, page title, meta description, and shareable preview.
+
+Privacy: Only necessary information should be collected. Any patient information or sensitive medical records should be outside the initial project scope.
+
+4. Recommended technology stack
+
+For this project, I recommend a custom full-stack application because the client wants to manage content himself.
+
+*Frontend — React + Vite
+
+Builds the public pages, article pages, admin dashboard, content forms, and responsive interface.
+
+Additional tools: React Router, Axios, CSS or Tailwind CSS.
+*Backend — Node.js + Express
+
+Handles login, authorization, article CRUD operations, image upload requests, and API endpoints.
+
+Additional tools: express-validator or Zod, bcrypt, and an authentication library.
+*Database — MySQL
+
+Stores admin credentials, doctor profile information, articles, categories, image URLs, and publication timestamps.
+*Image storage — Cloudinary or equivalent
+
+Stores article images and returns image URLs. The database stores those URLs, not the image files themselves.
+*Development tools — Git and GitHub
+
+Version control, source code backup, and deployment integration.
+
+5. System architecture
+
+The application will have four main components:
+      				Users and Admin
+
+		Public visitors browse; doctor manages content
+					|
+	
+Public React UI							Admin React UI
+
+Home, articles, treatments, contact		     Login, dashboard, content editor
+					|
+
+
+			Node.js + Express REST API
+		
+		Validation, authentication, authorization, content operations
+					|
+MySQL							Image storage
+
+Posts, categories, admin, doctor profile         Cover and article image files
+
+
+5.1 Public content flow
+
+A visitor opens the website.
+
+React requests published content from the backend.
+
+Express queries MySQL for published posts.
+
+MySQL returns the article data.
+
+React renders the content and loads images from image storage.
+
+5.2 Admin publishing flow
+
+The doctor opens the admin login page.
+
+The backend verifies the login credentials.
+
+The doctor opens the content editor.
+
+The doctor enters a title, article, category, and images.
+
+Images are uploaded to the image storage service.
+
+The backend validates the content and saves it in MySQL.
+
+The post status becomes PUBLISHED.
+
+The public website fetches the new post and displays it.
+
+No frontend redeployment should be needed when the doctor publishes a new article
+
+6. Website pages and navigation
+Public pages
+
+Home — /
+
+Doctor introduction, featured articles, latest posts, Ayurvedic categories, contact section, and a clear navigation menu.
+
+About the Doctor — /about
+
+Doctor's approved profile, qualifications, experience, specialization, and clinic information.
+
+Articles & Blogs — /articles
+
+Searchable list of published articles with cover images, excerpts, dates, and category labels.
+
+Treatments — /treatments
+
+Educational content about Ayurvedic treatments and traditional practices.
+
+Ayurvedic Points — /ayurvedic-points
+
+Short educational tips and posts, displayed as readable cards.
+
+Contact — /contact
+
+Clinic address, timings, telephone link, WhatsApp link, email, and map link if provided.
+
+Each post should also have a unique URL such as /articles/benefits-of-daily-routine.
+
+Admin pages
+
+/admin/login — secure login.
+
+/admin/dashboard — overview of posts and content.
+
+/admin/posts — list, search, edit, and delete posts.
+
+/admin/posts/new — create a new post.
+
+/admin/posts/:id/edit — edit an existing post.
+
+/admin/profile — update doctor and clinic information.
+
+The admin interface should not appear as an editing option to public visitors. Knowing the URL alone must never grant access.
+
+7. Footer design requirements
+
+The footer should be present on all public pages and contain:
+
+Website name: Vaidya Jayeshkumar
+
+Doctor/clinic contact details, if the client wants them repeated there
+
+Quick links to Home, About, Articles, Treatments, and Contact
+
+Privacy Policy and medical-information disclaimer links
+
+Copyright notice
+
+Developer credit: Designed & Developed by Anjali Jaisinghani
+
+8. Database design
+
+Use MySQL as the main database. The initial application needs four tables: admins, doctor_profile, categories, and posts.
+
+8.1 Database schema
+Table 1: admins
+Stores the login credentials of the authorized doctor/admin.
+
+Column		Type			Purpose
+id		INT, PK			Admin ID
+name		VARCHAR(100)		Admin name
+email		VARCHAR(255), UNIQUE	Login email
+password_hash	VARCHAR(255)		Hashed password
+created_at	DATETIME		Account creation time
+
+Table 2: doctor_profile
+
+Stores the doctor's public profile and clinic details.
+
+Column			Type		Purpose
+id			INT, PK		Profile ID
+doctor_name		VARCHAR(150)	Display name
+qualifications		TEXT		Verified qualifications
+specialization		VARCHAR(200)	Specialization
+experience		VARCHAR(100)	Approved experience details
+about			TEXT		Doctor introduction
+phone			VARCHAR(20)	Contact number
+WhatsApp		VARCHAR(20)	WhatsApp number
+email			VARCHAR(255)	Public contact email
+address			TEXT		Clinic address
+timings			TEXT		Clinic hours
+profile_image_url	TEXT		Profile photo URL
+updated_at		DATETIME	Last update
+
+Table 3: categories
+Groups content into different types.
+Column		Type			Purpose
+id		INT, PK			Category ID
+name		VARCHAR(120), UNIQUE	URL-friendly name
+description	TEXT			Optional description
+
+Table 4: posts
+Stores blogs, articles, treatments, and Ayurvedic points.
+
+Column		Type			Purpose
+id		INT, PK			Post ID
+category_id	INT, FK			Category reference
+title		VARCHAR(200)		Post title
+slug		VARCHAR(220), UNIQUE	Unique URL identifier
+excerpt		VARCHAR(500)		Short summary
+content		LONGTEXT		Main article content
+cover_image_url	TEXT			Main image URL
+status		ENUM			DRAFT or PUBLISHED
+published_at	DATETIME, NULL		Publication time
+created_at	DATETIME		Creation time
+updated_at	DATETIME		Last edit
+
+
+8.2 Relationships
+
+erDiagram
+    ADMINS {
+        int id PK
+        string name
+        string email UK
+        string password_hash
+    }
+    DOCTOR_PROFILE {
+        int id PK
+        string doctor_name
+        string phone
+        string address
+    }
+    CATEGORIES {
+        int id PK
+        string name UK
+        string slug UK
+    }
+    POSTS {
+        int id PK
+        int category_id FK
+        string title
+        string slug UK
+        longtext content
+        string cover_image_url
+        string status
+        datetime published_at
+    }
+    CATEGORIES ||--o{ POSTS : groups
+
+Design notes:
+
+One category can contain many posts.
+Each post belongs to one category.
+The initial system has one admin account, so an admin foreign key in every post is optional. Add author_id later if multiple authors are introduced.
+Store image URLs in MySQL, while the actual image files remain in cloud storage.
+Keep the doctor profile to one active record initially; an admin can update that record instead of creating duplicates.
+Use database migrations or version-controlled SQL scripts to manage schema changes.
+
+8.3 Suggested categories
+
+Create these categories when the application is first installed:
+
+Ayurvedic Concepts
+
+Ayurvedic Points
+
+Ayurvedic Treatments
+
+Herbs and Medicinal Plants
+
+Blogs
+
+General Wellness
+
+The doctor can add or rename categories later through the admin panel if that feature is included in the agreed scope.
+
+9. Backend API design
+
+The frontend and backend communicate through REST API endpoints.
+
+Use a versioned API prefix: /api/v1.
+
+9.1 Public endpoints
+
+Method	Endpoint			Purpose
+GET	/api/v1/profile			Fetch doctor information
+GET	/api/v1/categories		Fetch public categories
+GET	/api/v1/posts			List published posts
+GET	/api/v1/posts/:slug		Fetch one published article
+GET	/api/v1/posts/featured		Fetch featured posts, if implemented
+
+The posts listing endpoint should support pagination and optional filters such as category and search term.
+
+Example:
+
+GET /api/v1/posts?page=1&limit=9&category=blogs&search=herbs
+
+Only PUBLISHED posts should be returned by public endpoints.
+
+9.2 Admin endpoints
+
+Method	Endpoint				Purpose
+POST	/api/v1/admin/auth/login		Authenticate admin
+POST	/api/v1/admin/auth/logout		End session
+GET	/api/v1/admin/auth/me			Check current admin session
+GET	/api/v1/admin/posts			List all posts, including drafts
+POST	/api/v1/admin/posts			Create a post
+PATCH	/api/v1/admin/posts/:id			Edit a post
+DELETE	/api/v1/admin/posts/:id			Delete a post
+POST	/api/v1/admin/uploads			Upload an image
+PATCH	/api/v1/admin/profile			Update doctor profile
+POST	/api/v1/admin/categories		Create a category
+PATCH	/api/v1/admin/categories/:id		Edit a category
+DELETE	/api/v1/admin/categories/:id		Delete an unused category
+
+For immediate publishing, the create/update request should accept a publish action and save status = PUBLISHED with published_at set to the current time. Editing an already published post should update the public content without requiring a new deployment.
+
+Do not allow deleting a category while posts still reference it; either block the operation or require those posts to be reassigned first.
+
+10. Authentication and security
+
+The admin panel is private, but the public website is open to everyone.
+
+Recommended login approach
+
+Create the admin account during setup using a secure seed script or one-time setup procedure.
+
+Store only a strong password hash, never a plain-text password.
+
+Use bcrypt or Argon2 for password hashing.
+
+After successful login, issue a secure session or authentication token.
+
+Protect all admin API routes with authentication middleware.
+
+Validate the admin's permissions on the server for every create, update, delete, and upload operation.
+
+Add logout and session expiration.
+
+Configure HTTPS and secure cookie settings in production.
+
+For a single-admin website, an HTTP-only, Secure, SameSite cookie-based session is a good option. If you use cookie authentication, configure CSRF protections where applicable. Never put a permanent admin secret in frontend code or commit passwords to GitHub.
+
+Additional security requirements
+
+Rate-limit login attempts.
+
+Validate title, slug, category, and article content on the backend.
+
+Limit upload size and accept only allowed image types.
+
+Check actual file content instead of trusting the filename extension alone.
+
+Sanitize article HTML if using a rich-text editor to prevent cross-site scripting (XSS).
+
+Keep database credentials and cloud-storage credentials in environment variables.
+
+Use restricted database permissions and automated backups where available.
+
+Do not expose unpublished posts through public API endpoints.
+
+Avoid collecting patient medical records unless separately specified and properly secured.
+
+Important distinction
+
+Visitors do not need an account to read articles. Only the doctor needs an admin account to manage website content.
+
+11. Image storage and article editor
+
+The client needs to upload images with blogs and Ayurvedic articles. Therefore, image handling must be part of the initial implementation.
+
+Recommended approach
+
+Use a cloud image service such as Cloudinary, or an equivalent service with a suitable free tier.
+
+Step 1 — Upload
+
+The admin selects an image in the editor. The frontend sends it to the authenticated backend upload endpoint.
+
+Step 2 — Validate
+
+The backend checks the user's authorization, file size, and allowed image format before forwarding the upload.
+
+Step 3 — Store
+
+The image service stores the image and returns its URL. Keep upload credentials on the server.
+
+Step 4 — Save
+
+Save the URL in the post's cover_image_url column and reference it when displaying the article.
+
+Article editor requirements
+
+The admin editor should contain:
+
+Title
+
+Category
+
+Short excerpt
+
+Article content with headings, paragraphs, lists, and links
+
+Cover image upload and preview
+
+Optional additional inline images
+
+Publish button
+
+Edit and delete actions on the post list
+
+For the first version, use a simple rich-text editor rather than building one from scratch. Sanitize its output on the backend, and limit image sizes to avoid slow pages.
+
+When a post is deleted, handle its associated images safely. Avoid deleting an image that is still used by another post.
+
+12. Recommended project folder structure
+vaidya-jayeshkumar/
+│
+├── frontend/
+│   ├── public/
+│   └── src/
+│       ├── assets/
+│       ├── components/
+│       │   ├── Navbar.jsx
+│       │   ├── Footer.jsx
+│       │   ├── PostCard.jsx
+│       │   └── ProtectedRoute.jsx
+│       ├── pages/
+│       │   ├── Home.jsx
+│       │   ├── About.jsx
+│       │   ├── Articles.jsx
+│       │   ├── ArticleDetails.jsx
+│       │   ├── Treatments.jsx
+│       │   ├── AyurvedicPoints.jsx
+│       │   ├── Contact.jsx
+│       │   └── admin/
+│       │       ├── AdminLogin.jsx
+│       │       ├── Dashboard.jsx
+│       │       ├── PostList.jsx
+│       │       ├── PostEditor.jsx
+│       │       └── ProfileEditor.jsx
+│       ├── services/
+│       │   └── api.js
+│       ├── App.jsx
+│       └── main.jsx
+│
+├── backend/
+│   └── src/
+│       ├── config/
+│       │   ├── database.js
+│       │   └── cloudinary.js
+│       ├── controllers/
+│       ├── middleware/
+│       │   ├── auth.js
+│       │   ├── validate.js
+│       │   └── errorHandler.js
+│       ├── models/
+│       ├── routes/
+│       ├── services/
+│       ├── validators/
+│       ├── app.js
+│       └── server.js
+│
+├── database/
+│   ├── schema.sql
+│   └── seed.js
+├── .env.example
+├── .gitignore
+├── README.md
+└── package.json
+
+This is a proposed structure, not a requirement to create every file on day one. Start with the files needed for the first working feature and add the rest as the project grows.
+
+13. Step-by-step implementation plan
+
+Build the project in phases. Complete and test one phase before moving to the next.
+
+Phase 1 — Requirements and design
+
+Foundation
+
+Confirm the doctor's name, verified qualifications, clinic address, timings, and contact details.
+
+Collect the logo, profile photo, approved images, and initial content.
+
+Finalize the page layout, colour palette, navigation, and footer.
+
+Agree on what the doctor can manage from the admin panel.
+
+Phase 2 — Public frontend
+
+Create the React + Vite application.
+
+Build the navigation bar, home page, profile, contact section, and footer.
+
+Build article cards, category views, and individual article pages.
+
+Make the design responsive.
+
+Use sample content temporarily until the backend is ready.
+
+Phase 3 — Backend and database
+
+Initialize Node.js and Express.
+
+Connect to MySQL.
+
+Create the admin, profile, category, and post tables.
+
+Implement public endpoints for profiles and published posts.
+
+Test the API using Postman.
+
+Phase 4 — Admin authentication
+
+Create the initial admin account securely.
+
+Implement login and logout.
+
+Protect the admin pages and backend endpoints.
+
+Test invalid passwords and unauthorized API requests.
+
+Phase 5 — Content management
+
+Create the dashboard and post-management list.
+
+Build the article editor.
+
+Integrate image upload and storage.
+
+Implement create, edit, publish, and delete operations.
+
+Connect the public pages to live API data.
+
+Confirm that newly published posts appear without redeployment.
+
+Phase 6 — Testing and finalization
+
+Test on mobile, tablet, and desktop.
+
+Check every public link and admin action.
+
+Test image uploads, article edits, and deletion.
+
+Check security, page loading, and error handling.
+
+Add SEO metadata, favicon, privacy policy, and disclaimer.
+
+Phase 7 — Deployment
+
+Push the project to a private or appropriately managed GitHub repository.
+
+Deploy the frontend.
+
+Deploy the backend API.
+
+Create the production database.
+
+Configure environment variables and CORS.
+
+Configure the custom domain, if purchased.
+
+Enable HTTPS and test the live admin login and publishing workflow.
+
+Hand over admin credentials securely to the doctor.
+
+14. Deployment plan and estimated cost in INR
+
+You can deploy this website using free-tier services initially. However, because this is a full-stack website, the frontend, backend, database, image storage, and domain are separate considerations.
+
+
+
+
+The backend and database estimates are broad budgeting ranges, not guaranteed minimums. A free database or server may sleep, impose storage limits, or require a paid upgrade. Verify the exact current terms before choosing a provider.
+
+Example deployment setups
+Option A
+
+Prototype / low-budget launch
+
+Free frontend hosting + eligible free backend/database tiers + free image-storage tier + platform subdomain.
+
+Potentially ₹0/month
+
+Subject to availability, usage limits, and service restrictions. Not a guaranteed production-level setup.
+
+Option B
+
+Professional launch
+
+Custom domain + reliable backend/database hosting + image storage + backups and monitoring as needed.
+
+Budget around ₹500–₹3,000+/month
+
+Indicative budget only; the actual total can be lower or higher depending on hosting and usage.
+
+Who pays? Decide this with the client before starting. You can build and test the project for free locally, but production services and domain renewals should be agreed upon in advance. Ideally, the domain and production accounts belong to the doctor, and you receive developer access.
+
+15. Testing checklist
+
+Use this checklist before handing the website to the client.
+
+Pre-launch checklist
+
+0/17 completed
+
+Public home page opens without login
+Doctor profile and clinic contact details display correctly
+Published articles appear on the public website
+Admin can log in using valid credentials
+Invalid admin login is rejected
+Unauthenticated users cannot create or edit posts
+Admin can create an article with a cover image
+Published article appears immediately without redeployment
+Admin can edit a published article
+Admin can delete an article with confirmation
+Unpublished drafts are not exposed publicly
+Search and category filters work correctly
+Uploaded files are validated and display correctly
+Website works on mobile and desktop
+Footer includes the correct developer credit
+HTTPS and production environment variables are configured
+Privacy policy and medical-information disclaimer are available
+Copy checklist
+16. Medical content and legal considerations
+
+Since this is an Ayurvedic information website, include the following safeguards:
+
+Display accurate, doctor-approved qualifications and contact information.
+
+Make it clear that educational content is not a substitute for individualized medical advice.
+
+Avoid presenting unverified claims as proven cures or guaranteed treatment outcomes.
+
+Have the doctor review articles about treatments, herbs, dosage, and potential risks before publication.
+
+Do not add patient testimonials, photographs, or personal medical details without appropriate permission.
+
+Include a privacy policy and explain how any information submitted through contact forms will be used.
+
+Review applicable Indian laws and advertising requirements before publishing treatment claims or promoting products.
+
+The admin panel should allow the doctor to publish immediately, but the client remains responsible for the accuracy and appropriateness of the content he publishes.
+
+17. Future enhancements
+
+These are optional features, not part of the initial release unless the client approves them.
+
+SEO-friendly sitemap and search-engine indexing.
+
+Related articles and featured posts.
+
+Article view counts and basic analytics.
+
+Social media links.
+
+Scheduled publishing.
+
+Multiple authors and editorial approvals.
+
+Automated database backups.
+
+Multilingual content in English, Hindi, or Marathi.
+
+Appointment booking or e-commerce, if required later.
+
+Avoid adding all of these features at the start. Deliver a secure, working content-management website first.
+
+18. Project completion criteria
+
+The project is ready for handover when:
+
+The public website is accessible through its live URL.
+
+The doctor's approved information and contact details are displayed correctly.
+
+The admin can independently create, edit, publish, and delete content.
+
+Uploaded images display correctly in articles.
+
+Published content appears publicly without rebuilding or redeploying the frontend.
+
+Admin-only operations are protected.
+
+The site is responsive, tested, and served over HTTPS.
+
+The footer contains the agreed developer credit.
+
+The doctor receives a short user guide and secure access to the admin account.
+
+Hosting ownership, recurring expenses, backups, and maintenance responsibilities are documented.
+
+19. Final recommendation
+
+For your first version of Vaidya Jayeshkumar, keep the scope focused:
+
+Frontend: React + Vite
+
+Backend: Node.js + Express
+
+Database: MySQL
+
+Authentication: One secure admin account
+
+Images: Cloudinary or equivalent cloud storage
+
+Hosting: Free tiers for initial testing, then upgrade if production needs require it
+
+Public pages: Home, About, Articles, Treatments, Ayurvedic Points, Contact
+
+Admin features: Login, dashboard, article editor, image upload, categories, profile management
+
+Footer credit: Designed & Developed by Anjali Jaisinghani
+
+The most important architectural decision is to keep content in the database rather than hardcoding every article in React. This allows the doctor to manage the website independently, which is the core requirement of the project.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
