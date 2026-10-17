@@ -13,6 +13,9 @@ import Privacy from './pages/Privacy.jsx'
 import Disclaimer from './pages/Disclaimer.jsx'
 import NotFound from './pages/NotFound.jsx'
 
+// The admin panel is loaded only when someone opens /admin, so ordinary visitors never download it.
+const AdminApp = lazy(() => import('./admin/AdminApp.jsx'))
+
 // The design preview page exists in development only; it is left out of the live website.
 const StyleGuide = import.meta.env.DEV ? lazy(() => import('./pages/StyleGuide.jsx')) : null
 
@@ -33,6 +36,21 @@ export default function App() {
             <Route path="disclaimer" element={<Disclaimer />} />
             <Route path="*" element={<NotFound />} />
           </Route>
+          <Route
+            path="admin/*"
+            element={
+              <Suspense
+                fallback={
+                  <div className="flex min-h-screen items-center justify-center" role="status">
+                    <span className="spinner" aria-hidden="true" />
+                    <span className="sr-only">Loading...</span>
+                  </div>
+                }
+              >
+                <AdminApp />
+              </Suspense>
+            }
+          />
           {StyleGuide && (
             <Route
               path="/style-guide"
