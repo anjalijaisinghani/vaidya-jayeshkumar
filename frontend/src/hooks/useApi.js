@@ -2,7 +2,8 @@ import { useCallback, useEffect, useState } from 'react'
 import { api } from '../lib/api.js'
 
 // Loads data from the backend whenever `path` changes.
-// Returns { status: 'loading' | 'ready' | 'error', data, meta, error, reload }.
+// Returns { status: 'loading' | 'ready' | 'error', data, meta, error, reload, refreshing }.
+// While the same address is being reloaded, the old data stays visible (refreshing: true).
 export function useApi(path) {
   const [result, setResult] = useState({ path: null, attempt: -1 })
   const [attempt, setAttempt] = useState(0)
@@ -20,7 +21,9 @@ export function useApi(path) {
 
   const reload = useCallback(() => setAttempt((n) => n + 1), [])
 
-  // Results that belong to an older path or attempt count as "still loading".
-  const current = result.path === path && result.attempt === attempt
-  return current ? { ...result, reload } : { status: 'loading', reload }
+  if (result.path === path && result.attempt === attempt) return { ...result, reload }
+  // Reloading the same address: keep showing what we have instead of flashing a loading state.
+  if (result.path === path && result.status === 'ready') return { ...result, refreshing: true, reload }
+  // A different address (or the first load): results from before do not apply.
+  return { status: 'loading', reload }
 }

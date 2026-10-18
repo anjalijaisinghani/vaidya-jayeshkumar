@@ -6,7 +6,10 @@ import { SITE_NAME } from '../lib/site.js'
 import { useAuth } from './auth/useAuth.js'
 
 // More entries are added here as the admin pages are built.
-const ADMIN_NAV = [{ to: '/admin', label: 'Dashboard', end: true }]
+const ADMIN_NAV = [
+  { to: '/admin', label: 'Dashboard', end: true },
+  { to: '/admin/posts', label: 'Posts' },
+]
 
 const tabClass = ({ isActive }) =>
   `block rounded-full px-4 py-2 text-sm font-medium whitespace-nowrap no-underline transition-colors ${
