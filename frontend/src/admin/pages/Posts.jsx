@@ -104,8 +104,13 @@ export default function Posts() {
   return (
     <>
       <Seo title="Posts" noindex />
-      <h1 className="text-3xl" ref={headingRef} tabIndex={-1}>Posts</h1>
-      <p className="mt-2 text-ink-600">All articles, treatments and points, including drafts.</p>
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h1 className="text-3xl" ref={headingRef} tabIndex={-1}>Posts</h1>
+          <p className="mt-2 text-ink-600">All articles, treatments and points, including drafts.</p>
+        </div>
+        <Link to="/admin/posts/new" className="btn btn-primary">New post</Link>
+      </div>
 
       <div className="mt-6 space-y-3" aria-live="polite">
         {notice && (
@@ -196,7 +201,12 @@ export default function Posts() {
                   <li key={post.id} className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
                     <div className="min-w-0">
                       <p className="flex flex-wrap items-center gap-2">
-                        <span className="font-serif text-lg font-semibold break-words text-leaf-800">{post.title}</span>
+                        <Link
+                          to={`/admin/posts/${post.id}/edit`}
+                          className="font-serif text-lg font-semibold break-words text-leaf-800 no-underline hover:underline"
+                        >
+                          {post.title}
+                        </Link>
                         <StatusBadge status={post.status} />
                         {post.is_featured ? (
                           <span className="rounded-full bg-cream-200 px-3 py-1 text-xs font-semibold text-ink-700">Featured</span>
@@ -214,6 +224,13 @@ export default function Posts() {
                     </div>
 
                     <div className="flex flex-wrap gap-2">
+                      <Link
+                        to={`/admin/posts/${post.id}/edit`}
+                        className="btn btn-secondary btn-sm"
+                        aria-label={`Edit: ${post.title}`}
+                      >
+                        Edit
+                      </Link>
                       {post.status === 'PUBLISHED' && (
                         <a
                           href={`/articles/${post.slug}`}
@@ -267,7 +284,11 @@ export default function Posts() {
                 <p className="mt-2 text-ink-600">
                   {filtering ? 'Try different words or clear the filters.' : 'Posts you create will appear here.'}
                 </p>
-                {filtering && <Link to="/admin/posts" className="btn btn-primary mt-5">Clear search and filters</Link>}
+                {filtering ? (
+                  <Link to="/admin/posts" className="btn btn-primary mt-5">Clear search and filters</Link>
+                ) : (
+                  <Link to="/admin/posts/new" className="btn btn-primary mt-5">Write your first post</Link>
+                )}
               </div>
             )}
 

@@ -1,3 +1,4 @@
+import { Link } from 'react-router'
 import { useAdminApi } from '../hooks/useAdminApi.js'
 import { useAuth } from '../auth/useAuth.js'
 
@@ -16,6 +17,9 @@ export default function Dashboard() {
     <>
       <h1 className="text-3xl">Welcome{admin?.name ? `, ${admin.name}` : ''}</h1>
       <p className="mt-2 text-ink-600">Here is an overview of the website content.</p>
+      <p className="mt-6">
+        <Link to="/admin/posts/new" className="btn btn-primary">Write a new post</Link>
+      </p>
 
       <section className="mt-8" aria-labelledby="overview-heading">
         <h2 id="overview-heading" className="sr-only">Content overview</h2>

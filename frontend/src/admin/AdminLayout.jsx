@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { NavLink, Outlet } from 'react-router'
 import emblem from '../assets/emblem.webp'
 import Seo from '../components/Seo.jsx'
@@ -71,7 +71,16 @@ export default function AdminLayout() {
       )}
 
       <main className="container-page py-8 sm:py-10">
-        <Outlet />
+        <Suspense
+          fallback={
+            <div className="flex justify-center py-16" role="status">
+              <span className="spinner" aria-hidden="true" />
+              <span className="sr-only">Loading...</span>
+            </div>
+          }
+        >
+          <Outlet />
+        </Suspense>
       </main>
     </div>
   )

@@ -12,9 +12,12 @@ export class ApiError extends Error {
 }
 
 // Returns the parsed JSON body: { success, data, meta? }. Throws ApiError on any failure.
+// `body` is sent as JSON, unless it is a FormData (a file upload), which is sent as it is.
 export async function api(path, { method = 'GET', body, signal } = {}) {
   const options = { method, credentials: 'include', signal, headers: {} }
-  if (body !== undefined) {
+  if (body instanceof FormData) {
+    options.body = body
+  } else if (body !== undefined) {
     options.headers['Content-Type'] = 'application/json'
     options.body = JSON.stringify(body)
   }
