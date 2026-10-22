@@ -1,13 +1,17 @@
-import { useEffect, useState } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { Link, useBlocker, useLocation, useNavigate } from 'react-router'
 import Seo from '../../components/Seo.jsx'
+import { formatDateTime } from '../../lib/format.js'
+import ConfirmDialog from '../components/ConfirmDialog.jsx'
 import CoverImageField from '../components/CoverImageField.jsx'
 import RichTextEditor from '../components/RichTextEditor.jsx'
 import StatusBadge from '../components/StatusBadge.jsx'
 import { useAdminApi } from '../hooks/useAdminApi.js'
 import { useAdminRequest } from '../hooks/useAdminRequest.js'
 import { useUnsavedWarning } from '../hooks/useUnsavedWarning.js'
+import { backupKey, clearBackup, readBackup, writeBackup } from '../lib/backup.js'
 import { uploadImage } from '../lib/images.js'
+import { useReportUnsaved } from '../unsaved.js'
 
 function formFrom(post) {
   return {
@@ -60,7 +64,53 @@ export default function PostForm({ initialPost }) {
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const dirty = JSON.stringify(form) !== saved
-  useUnsavedWarning(dirty)
+  useUnsavedWarning(dirty) // closing or reloading the tab
+  useReportUnsaved(dirty) // signing out (the admin layout asks first)
+
+  // ---- Protection against losing work ----
+  const key = backupKey(initialPost?.id)
+  const editorRef = useRef(null)
+  const [restorable, setRestorable] = useState(null) // a backup found when the form opened
+  const dirtyRef = useRef(false)
+  const latest = useRef({ form, dirty, base: null })
+
+  useEffect(() => {
+    dirtyRef.current = dirty
+    latest.current = { form, dirty, base: post?.updated_at ?? null }
+  }, [form, dirty, post])
+
+  // Moving to another admin page with unsaved changes asks first (links and the Back button).
+  const shouldBlock = useCallback(
+    ({ currentLocation, nextLocation }) => dirtyRef.current && currentLocation.pathname !== nextLocation.pathname,
+    [],
+  )
+  const blocker = useBlocker(shouldBlock)
+
+  // While there are unsaved changes, keep a copy in this browser a moment after each pause in typing.
+  useEffect(() => {
+    if (!dirty) return undefined
+    const timer = setTimeout(() => writeBackup(key, form, post?.updated_at), 700)
+    return () => clearTimeout(timer)
+  }, [form, dirty, key, post])
+
+  // ...and write the latest copy straight away when the page is left or the tab is closed.
+  useEffect(() => {
+    const flush = () => {
+      if (latest.current.dirty) writeBackup(key, latest.current.form, latest.current.base)
+    }
+    window.addEventListener('pagehide', flush)
+    return () => {
+      window.removeEventListener('pagehide', flush)
+      flush()
+    }
+  }, [key])
+
+  // Everything is saved on the server, so the browser copy is no longer needed.
+  function markSaved() {
+    dirtyRef.current = false
+    latest.current = { ...latest.current, dirty: false }
+    clearBackup(key)
+  }
 
   const isPublished = post?.status === 'PUBLISHED'
   const update = (changes) => setForm((current) => ({ ...current, ...changes }))
@@ -71,6 +121,26 @@ export default function PostForm({ initialPost }) {
     setForm((current) => ({ ...current, body }))
     setSaved((current) => JSON.stringify({ ...JSON.parse(current), body }))
     setBodyEmpty(isEmpty)
+
+    // Is there unsaved work from an earlier visit (crash, closed tab, expired session)?
+    const backup = readBackup(key)
+    if (!backup) return
+    const baseline = JSON.stringify({ ...formFrom(initialPost), body })
+    if (JSON.stringify(backup.form) === baseline) clearBackup(key)
+    else setRestorable(backup)
+  }
+
+  function restoreBackup() {
+    const { form: backed } = restorable
+    setForm(backed)
+    setBodyEmpty(backed.body === '')
+    editorRef.current?.setHtml(backed.body)
+    setRestorable(null)
+  }
+
+  function discardBackup() {
+    clearBackup(key)
+    setRestorable(null)
   }
 
   function onEditorChange(html, isEmpty) {
@@ -113,6 +183,7 @@ export default function PostForm({ initialPost }) {
           method: 'POST',
           body: { ...payload, action: kind === 'publish' ? 'publish' : 'draft' },
         })
+        markSaved() // before moving on, or the "leave without saving?" box would appear
         navigate(`/admin/posts/${res.data.id}/edit`, {
           replace: true,
           state: { notice: SUCCESS_TEXT[kind] },
@@ -124,6 +195,7 @@ export default function PostForm({ initialPost }) {
         method: 'PATCH',
         body: action ? { ...payload, action } : payload,
       })
+      markSaved()
       setPost(res.data)
       setSaved(JSON.stringify(form))
       setNotice(SUCCESS_TEXT[kind])
@@ -162,6 +234,25 @@ export default function PostForm({ initialPost }) {
         )}
       </div>
 
+      {restorable && (
+        <div className="alert alert-info mt-4" role="region" aria-label="Unsaved changes found">
+          <p className="font-semibold">We found unsaved changes from {formatDateTime(restorable.savedAt)}.</p>
+          <p className="mt-1">
+            They are kept only in this browser.
+            {restorable.baseUpdatedAt !== (initialPost?.updated_at ?? null) &&
+              ' This post was changed after that copy was made, so saving it would replace those newer changes.'}
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <button type="button" className="btn btn-primary btn-sm" onClick={restoreBackup}>
+              Restore changes
+            </button>
+            <button type="button" className="btn btn-secondary btn-sm" onClick={discardBackup}>
+              Discard
+            </button>
+          </div>
+        </div>
+      )}
+
       {problems.length > 0 && (
         <div className="alert alert-error mt-4" role="alert">
           <p className="font-semibold">Please fix the following:</p>
@@ -192,6 +283,7 @@ export default function PostForm({ initialPost }) {
           <div id="post-body">
             <p id="post-body-label" className="field-label">Article text</p>
             <RichTextEditor
+              ref={editorRef}
               initialHtml={form.body}
               onReady={onEditorReady}
               onChange={onEditorChange}
@@ -305,6 +397,21 @@ export default function PostForm({ initialPost }) {
           </div>
         </aside>
       </div>
+
+      <ConfirmDialog
+        open={blocker.state === 'blocked'}
+        title="Leave without saving?"
+        confirmLabel="Leave page"
+        cancelLabel="Stay on this page"
+        danger
+        onConfirm={() => blocker.proceed?.()}
+        onCancel={() => blocker.reset?.()}
+      >
+        <p>
+          You have changes that are not saved to the website yet. If you leave now, a copy stays in this browser and
+          you can restore it the next time you open this post.
+        </p>
+      </ConfirmDialog>
     </>
   )
 }

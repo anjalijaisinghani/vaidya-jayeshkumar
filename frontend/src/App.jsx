@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router'
+import { Route, Routes } from 'react-router'
 import ProfileProvider from './context/ProfileProvider.jsx'
 import SiteLayout from './components/layout/SiteLayout.jsx'
 import Home from './pages/Home.jsx'
@@ -21,48 +21,46 @@ const StyleGuide = import.meta.env.DEV ? lazy(() => import('./pages/StyleGuide.j
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <ProfileProvider>
-        <Routes>
-          <Route element={<SiteLayout />}>
-            <Route index element={<Home />} />
-            <Route path="about" element={<About />} />
-            <Route path="articles" element={<Articles />} />
-            <Route path="articles/:slug" element={<ArticleDetail />} />
-            <Route path="treatments" element={<Treatments />} />
-            <Route path="ayurvedic-points" element={<AyurvedicPoints />} />
-            <Route path="contact" element={<Contact />} />
-            <Route path="privacy" element={<Privacy />} />
-            <Route path="disclaimer" element={<Disclaimer />} />
-            <Route path="*" element={<NotFound />} />
-          </Route>
+    <ProfileProvider>
+      <Routes>
+        <Route element={<SiteLayout />}>
+          <Route index element={<Home />} />
+          <Route path="about" element={<About />} />
+          <Route path="articles" element={<Articles />} />
+          <Route path="articles/:slug" element={<ArticleDetail />} />
+          <Route path="treatments" element={<Treatments />} />
+          <Route path="ayurvedic-points" element={<AyurvedicPoints />} />
+          <Route path="contact" element={<Contact />} />
+          <Route path="privacy" element={<Privacy />} />
+          <Route path="disclaimer" element={<Disclaimer />} />
+          <Route path="*" element={<NotFound />} />
+        </Route>
+        <Route
+          path="admin/*"
+          element={
+            <Suspense
+              fallback={
+                <div className="flex min-h-screen items-center justify-center" role="status">
+                  <span className="spinner" aria-hidden="true" />
+                  <span className="sr-only">Loading...</span>
+                </div>
+              }
+            >
+              <AdminApp />
+            </Suspense>
+          }
+        />
+        {StyleGuide && (
           <Route
-            path="admin/*"
+            path="/style-guide"
             element={
-              <Suspense
-                fallback={
-                  <div className="flex min-h-screen items-center justify-center" role="status">
-                    <span className="spinner" aria-hidden="true" />
-                    <span className="sr-only">Loading...</span>
-                  </div>
-                }
-              >
-                <AdminApp />
+              <Suspense fallback={null}>
+                <StyleGuide />
               </Suspense>
             }
           />
-          {StyleGuide && (
-            <Route
-              path="/style-guide"
-              element={
-                <Suspense fallback={null}>
-                  <StyleGuide />
-                </Suspense>
-              }
-            />
-          )}
-        </Routes>
-      </ProfileProvider>
-    </BrowserRouter>
+        )}
+      </Routes>
+    </ProfileProvider>
   )
 }

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { api } from '../../lib/api.js'
+import { clearAllBackups, resumeBackups, suspendBackups } from '../lib/backup.js'
 import { AuthContext } from './authContext.js'
 
 const SIGNED_OUT = { status: 'anonymous', admin: null, error: null, expired: false }
@@ -13,7 +14,10 @@ export default function AuthProvider({ children }) {
   useEffect(() => {
     const controller = new AbortController()
     api('/admin/auth/me', { signal: controller.signal })
-      .then((res) => setState({ status: 'authenticated', admin: res.data, error: null, expired: false }))
+      .then((res) => {
+        resumeBackups()
+        setState({ status: 'authenticated', admin: res.data, error: null, expired: false })
+      })
       .catch((err) => {
         if (err.name === 'AbortError') return
         // 401 just means "not signed in". Anything else (server down) is worth telling the user.
@@ -24,6 +28,7 @@ export default function AuthProvider({ children }) {
 
   const login = useCallback(async (email, password) => {
     const res = await api('/admin/auth/login', { method: 'POST', body: { email, password } })
+    resumeBackups()
     setState({ status: 'authenticated', admin: res.data, error: null, expired: false })
   }, [])
 
@@ -34,6 +39,9 @@ export default function AuthProvider({ children }) {
       // If the server could not be reached the session may still be active, so say so.
       if (err.status !== 401) throw err
     }
+    // A deliberate sign-out also removes the browser backups (the next person must not see them).
+    suspendBackups()
+    clearAllBackups()
     setState(SIGNED_OUT)
   }, [])
 

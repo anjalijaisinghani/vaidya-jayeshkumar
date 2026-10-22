@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useImperativeHandle, useRef, useState } from 'react'
 import { EditorContent, useEditor, useEditorState } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Image from '@tiptap/extension-image'
@@ -54,7 +54,8 @@ function ToolButton({ label, pressed, disabled, onClick, children }) {
 // onReady(html, isEmpty):  called once, with the editor's own tidy version of initialHtml
 // onChange(html, isEmpty): called after every edit
 // onUploadImage(file):     uploads a picture and returns its web address
-export default function RichTextEditor({ initialHtml, onReady, onChange, onUploadImage, labelId, describedBy, invalid = false }) {
+// ref:                     gives the form setHtml(html), which replaces the whole text
+export default function RichTextEditor({ ref, initialHtml, onReady, onChange, onUploadImage, labelId, describedBy, invalid = false }) {
   const [linkOpen, setLinkOpen] = useState(false)
   const [linkUrl, setLinkUrl] = useState('')
   const [linkError, setLinkError] = useState('')
@@ -80,10 +81,22 @@ export default function RichTextEditor({ initialHtml, onReady, onChange, onUploa
   })
 
   // Tell the form once what the editor made of the starting text. Done here, after mounting,
-  // so the form is never updated before it is ready to receive it.
+  // so the form is never updated before it is ready to receive it. While a page is being
+  // swapped in, the editor can be replaced by a fresh one, so an already-discarded editor is skipped
+  // (the effect runs again for the new one).
   useEffect(() => {
-    if (editor) onReady?.(editor.getHTML(), editor.isEmpty)
+    if (editor && !editor.isDestroyed) onReady?.(editor.getHTML(), editor.isEmpty)
   }, [editor]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      setHtml: (html) => {
+        if (editor && !editor.isDestroyed) editor.commands.setContent(html)
+      },
+    }),
+    [editor],
+  )
 
   const state = useEditorState({
     editor,
@@ -110,7 +123,7 @@ export default function RichTextEditor({ initialHtml, onReady, onChange, onUploa
         : null,
   })
 
-  if (!editor || !state) return <div className="skeleton h-72 w-full" aria-hidden="true" />
+  if (!editor || editor.isDestroyed || !state) return <div className="skeleton h-72 w-full" aria-hidden="true" />
 
   const run = () => editor.chain().focus()
 

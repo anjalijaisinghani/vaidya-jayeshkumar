@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useId, useRef } from 'react'
 
 // A "Are you sure?" box built on the browser's own <dialog>, which traps keyboard focus,
 // closes with the Esc key and returns focus afterwards.
@@ -7,6 +7,7 @@ export default function ConfirmDialog({
   title,
   children,
   confirmLabel = 'Confirm',
+  cancelLabel = 'Cancel',
   busy = false,
   error = '',
   danger = false,
@@ -14,6 +15,7 @@ export default function ConfirmDialog({
   onCancel,
 }) {
   const ref = useRef(null)
+  const titleId = useId()
 
   useEffect(() => {
     const dialog = ref.current
@@ -25,7 +27,7 @@ export default function ConfirmDialog({
   return (
     <dialog
       ref={ref}
-      aria-labelledby="confirm-title"
+      aria-labelledby={titleId}
       onCancel={(event) => {
         // Esc key: we decide what happens, so a running request is never interrupted.
         event.preventDefault()
@@ -39,14 +41,14 @@ export default function ConfirmDialog({
     >
       {open && (
         <div className="p-6 sm:p-8">
-          <h2 id="confirm-title" className="text-2xl">{title}</h2>
+          <h2 id={titleId} className="text-2xl">{title}</h2>
           <div className="mt-3 text-ink-700">{children}</div>
           {error && (
             <p className="alert alert-error mt-4" role="alert">{error}</p>
           )}
           <div className="mt-6 flex flex-wrap justify-end gap-3">
             <button type="button" className="btn btn-secondary" onClick={onCancel} disabled={busy}>
-              Cancel
+              {cancelLabel}
             </button>
             <button
               type="button"
