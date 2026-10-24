@@ -3,7 +3,7 @@ import { Link, useBlocker, useLocation, useNavigate } from 'react-router'
 import Seo from '../../components/Seo.jsx'
 import { formatDateTime } from '../../lib/format.js'
 import ConfirmDialog from '../components/ConfirmDialog.jsx'
-import CoverImageField from '../components/CoverImageField.jsx'
+import ImageField from '../components/ImageField.jsx'
 import RichTextEditor from '../components/RichTextEditor.jsx'
 import StatusBadge from '../components/StatusBadge.jsx'
 import { useAdminApi } from '../hooks/useAdminApi.js'
@@ -375,7 +375,7 @@ export default function PostForm({ initialPost }) {
           </div>
 
           <div className="card p-5">
-            <CoverImageField value={form.coverUrl} onChange={(coverUrl) => update({ coverUrl })} onUpload={upload} />
+            <ImageField value={form.coverUrl} onChange={(coverUrl) => update({ coverUrl })} onUpload={upload} />
           </div>
 
           <div className="card p-5">

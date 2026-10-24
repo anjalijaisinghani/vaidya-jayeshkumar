@@ -20,7 +20,8 @@ function looksValid(form) {
 }
 
 // Returns { form, baseUpdatedAt, savedAt } or null. Old (30 days) or damaged copies are deleted.
-export function readBackup(key) {
+// isValid(form) says whether a stored form has the right shape (posts are checked by default).
+export function readBackup(key, isValid = looksValid) {
   let raw
   try {
     raw = window.localStorage.getItem(key)
@@ -32,7 +33,7 @@ export function readBackup(key) {
   try {
     const data = JSON.parse(raw)
     const fresh = data && typeof data.savedAt === 'number' && Date.now() - data.savedAt < MAX_AGE_MS
-    if (fresh && looksValid(data.form)) return data
+    if (fresh && isValid(data.form)) return data
   } catch {
     // not valid JSON: treated as damaged below
   }

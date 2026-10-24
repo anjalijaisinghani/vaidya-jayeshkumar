@@ -6,6 +6,7 @@ import AdminLayout from './AdminLayout.jsx'
 import Login from './pages/Login.jsx'
 import Dashboard from './pages/Dashboard.jsx'
 import Posts from './pages/Posts.jsx'
+import Profile from './pages/Profile.jsx'
 import AdminNotFound from './pages/AdminNotFound.jsx'
 
 // The post editor is large, so it is only downloaded when someone opens the new or edit page.
@@ -24,6 +25,7 @@ export default function AdminApp() {
             <Route path="posts" element={<Posts />} />
             <Route path="posts/new" element={<NewPost />} />
             <Route path="posts/:id/edit" element={<EditPost />} />
+            <Route path="profile" element={<Profile />} />
             <Route path="*" element={<AdminNotFound />} />
           </Route>
         </Route>

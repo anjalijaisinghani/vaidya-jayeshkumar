@@ -11,6 +11,7 @@ import { UnsavedContext } from './unsaved.js'
 const ADMIN_NAV = [
   { to: '/admin', label: 'Dashboard', end: true },
   { to: '/admin/posts', label: 'Posts' },
+  { to: '/admin/profile', label: 'Doctor profile' },
 ]
 
 const tabClass = ({ isActive }) =>
