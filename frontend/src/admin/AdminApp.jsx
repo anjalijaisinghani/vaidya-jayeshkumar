@@ -5,6 +5,7 @@ import RequireAuth from './RequireAuth.jsx'
 import AdminLayout from './AdminLayout.jsx'
 import Login from './pages/Login.jsx'
 import Dashboard from './pages/Dashboard.jsx'
+import Categories from './pages/Categories.jsx'
 import Posts from './pages/Posts.jsx'
 import Profile from './pages/Profile.jsx'
 import AdminNotFound from './pages/AdminNotFound.jsx'
@@ -25,6 +26,7 @@ export default function AdminApp() {
             <Route path="posts" element={<Posts />} />
             <Route path="posts/new" element={<NewPost />} />
             <Route path="posts/:id/edit" element={<EditPost />} />
+            <Route path="categories" element={<Categories />} />
             <Route path="profile" element={<Profile />} />
             <Route path="*" element={<AdminNotFound />} />
           </Route>
