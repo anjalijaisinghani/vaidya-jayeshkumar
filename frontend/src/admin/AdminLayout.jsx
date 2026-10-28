@@ -1,5 +1,5 @@
 import { Suspense, useState } from 'react'
-import { NavLink, Outlet } from 'react-router'
+import { Link, NavLink, Outlet } from 'react-router'
 import emblem from '../assets/emblem.webp'
 import Seo from '../components/Seo.jsx'
 import ConfirmDialog from './components/ConfirmDialog.jsx'
@@ -13,6 +13,7 @@ const ADMIN_NAV = [
   { to: '/admin/posts', label: 'Posts' },
   { to: '/admin/categories', label: 'Categories' },
   { to: '/admin/profile', label: 'Doctor profile' },
+  { to: '/admin/account', label: 'Account' },
 ]
 
 const tabClass = ({ isActive }) =>
@@ -52,7 +53,7 @@ export default function AdminLayout() {
               <a href="/" target="_blank" rel="noopener noreferrer" className="font-semibold">
                 View website
               </a>
-              <span className="text-ink-600">{admin?.name}</span>
+              <Link to="/admin/account" className="text-ink-700">{admin?.name}</Link>
               <button type="button" className="btn btn-secondary btn-sm" onClick={() => (unsaved ? setConfirmSignOut(true) : onSignOut())}>
                 Sign out
               </button>

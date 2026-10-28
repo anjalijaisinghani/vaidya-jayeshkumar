@@ -67,7 +67,7 @@ export function isValidPhone(value) {
 }
 
 // The same rule the server uses (the Zod library's email check), so the form and the server agree.
-const looksLikeEmail = (value) =>
+export const looksLikeEmail = (value) =>
   /^(?:[A-Za-z0-9_'+-]+\.)*[A-Za-z0-9_'+-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9-]*\.)+[A-Za-z]{2,}$/.test(value)
 
 function isHttpsUrl(value) {

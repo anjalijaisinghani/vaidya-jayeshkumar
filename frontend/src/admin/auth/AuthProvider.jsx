@@ -45,9 +45,15 @@ export default function AuthProvider({ children }) {
     setState(SIGNED_OUT)
   }, [])
 
+  // After the admin changes his own name or email, the header shows the new details.
+  const updateAdmin = useCallback((admin) => setState((current) => ({ ...current, admin })), [])
+
   // Called when the server says the session is no longer valid (for example after 8 hours).
   const expire = useCallback(() => setState({ ...SIGNED_OUT, expired: true }), [])
 
-  const value = useMemo(() => ({ ...state, login, logout, expire }), [state, login, logout, expire])
+  const value = useMemo(
+    () => ({ ...state, login, logout, expire, updateAdmin }),
+    [state, login, logout, expire, updateAdmin],
+  )
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
