@@ -9,17 +9,20 @@ export default function PostCard({ post, level = 2 }) {
 
   return (
     <article className="card card-hover relative flex flex-col overflow-hidden focus-within:ring-2 focus-within:ring-leaf-600">
-      <div className="flex aspect-[16/10] items-center justify-center bg-leaf-100">
+      {/* A fixed-shape box. The picture is laid over it (absolute), so its own proportions can never change the box. */}
+      <div className="relative aspect-[16/10] shrink-0 overflow-hidden bg-leaf-100">
         {post.cover_image_url ? (
           <img
             src={post.cover_image_url}
             alt=""
             loading="lazy"
             decoding="async"
-            className="h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full object-cover"
           />
         ) : (
-          <img src={emblem} alt="" width="192" height="190" className="h-20 w-auto opacity-40" />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <img src={emblem} alt="" width="192" height="190" className="h-20 w-auto opacity-40" />
+          </div>
         )}
       </div>
       <div className="flex flex-1 flex-col p-5">

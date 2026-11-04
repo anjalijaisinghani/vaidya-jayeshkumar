@@ -1,6 +1,6 @@
 import { Link } from 'react-router'
 import { useProfile } from '../../context/useProfile.js'
-import { CREDIT, LEGAL_ITEMS, NAV_ITEMS, SITE_NAME, SITE_TAGLINE } from '../../lib/site.js'
+import { CREDIT, DEVELOPER_EMAIL, LEGAL_ITEMS, NAV_ITEMS, SITE_NAME, SITE_TAGLINE } from '../../lib/site.js'
 
 const footerLink = 'text-leaf-100 no-underline hover:text-white hover:underline'
 const CURRENT_YEAR = new Date().getFullYear()
@@ -65,7 +65,20 @@ export default function Footer() {
           </p>
           <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
             <p>&copy; {CURRENT_YEAR} {SITE_NAME}. All rights reserved.</p>
-            <p>{CREDIT}</p>
+                        <p>
+              {CREDIT}
+              {DEVELOPER_EMAIL && (
+                <>
+                  <span className="hidden sm:inline" aria-hidden="true">{' '}&middot;{' '}</span>
+                  <a
+                    href={`mailto:${DEVELOPER_EMAIL}`}
+                    className="block break-words text-leaf-100 underline hover:text-white sm:inline"
+                  >
+                    {DEVELOPER_EMAIL}
+                  </a>
+                </>
+              )}
+            </p>
           </div>
         </div>
       </div>

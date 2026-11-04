@@ -4,6 +4,10 @@ export const SITE_NAME = 'Vaidya Jayeshkumar'
 export const SITE_TAGLINE = 'Ayurvedic Treatment'
 export const CREDIT = 'Designed & Developed by Anjali Jaisinghani'
 
+// The developer's contact email, shown beside the credit in the footer.
+// Type the address between the quotes. Leave it empty ('') to show no email there.
+export const DEVELOPER_EMAIL = 'anjalijaisinghani42@gmail.com'
+
 export const NAV_ITEMS = [
   { to: '/', label: 'Home', end: true },
   { to: '/about', label: 'About' },

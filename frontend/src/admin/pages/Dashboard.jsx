@@ -54,10 +54,7 @@ export default function Dashboard() {
         )}
       </section>
 
-      {/* Temporary note: removed when the posts, categories and profile pages are added. */}
-      <p className="alert alert-info mt-8" role="note">
-        More tools (posts, categories and the doctor's profile) are being added step by step.
-      </p>
+     
     </>
   )
 }
